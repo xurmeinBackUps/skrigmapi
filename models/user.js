@@ -1,21 +1,22 @@
-module.exports = function(sequelize, DataType){
-    return sequelize.define('user', {
+module.exports = (sequelize, DataType) => {
+    const User = sequelize.define('user', {
         username:{
             type: DataType.STRING,
             allowNull: false,
-            unique: true
+            unique: true,
+            primaryKey: true
         },
-        passwordhash:{
+        password:{
             type: DataType.STRING,
             allowNull: false
         },
-        confirmed_email:{
-           type: DataType.BOOLEAN,
-           //allowNull: true change to false after initial testing
-        },
-        // timezone:{
-        //     type: DataType.ENUM,
-        //      allowNull: true
-        // }
     });
+    User.associate = (models) => {
+        User.hasMany(models.Panel, {
+            as: 'screens',
+            foreignKey: 'panel_id',
+            sourceKey: 'username'
+        });
+    }
+    return User
 };
