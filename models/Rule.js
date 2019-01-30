@@ -13,11 +13,10 @@ module.exports = (sequelize, DataType) => {
             type: DataType.STRING,
             allowNull: false
         }
-    });
-    Rule.associate = (models) => {
-        Rule.belongsTo(models.Rref, {
-            foreignKey: 'rule_id',
-            targetKey: 'rref_id'
+    }, { timestamps: false });
+    Rule.associate = (Rref) => {
+        Rule.belongsTo(Rref, {
+            foreignKey: 'rref_id'
         });
     }
     return Rule

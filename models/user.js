@@ -9,14 +9,14 @@ module.exports = (sequelize, DataType) => {
         password:{
             type: DataType.STRING,
             allowNull: false
-        },
-    });
-    User.associate = (models) => {
-        User.hasMany(models.Panel, {
-            as: 'screens',
-            foreignKey: 'panel_id',
-            sourceKey: 'username'
-        });
-    }
+        }
+    }, { timestamps: false });
+
+    // User.associate = (Panel) => {
+    //     User.hasMany(Panel, {
+    //         as: 'GM',
+    //         foreignKey: 'username'
+    //     });
+    // };
     return User
 };

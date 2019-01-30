@@ -9,17 +9,16 @@ module.exports = (sequelize, DataType) => {
             type: DataType.STRING,
             allowNull: false
         }
-    });
-    Panel.associate = (models) => {
-        Panel.belongsTo(models.User, {
-            foreignKey: 'panel_id',
-            targetKey: 'username'
+    }, { timestamps: false });
+
+    Panel.associate = (User) => {
+        Panel.belongsTo(User, {
+            foreignKey: 'username'
         });
-        Panel.hasMany(models.Rref, {
-            as: 'sections',
-            foreignKey: 'rref_id',
-            sourceKey: 'panel_id'
-        });
-    }
+        // Panel.hasMany(models.Rref, {
+        //     as: 'section',
+        //     foreignKey: ['rref'],
+        // });
+    };
     return Panel
 };

@@ -13,11 +13,10 @@ module.exports = (sequelize, DataType) => {
             type: DataType.TEXT,
             allowNull: false
         }
-    });
-    Def.associate = (models) => {
-        Def.belongsTo(models.Rref, {
-            foreignKey: 'def_id',
-            targetKey: 'rref_id'
+    }, { timestamps: false });
+    Def.associate = (Rref) => {
+        Def.belongsTo(Rref, {
+            foreignKey: 'rref_id'
         });
     }
     return Def

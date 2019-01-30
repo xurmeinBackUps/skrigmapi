@@ -9,22 +9,20 @@ module.exports = (sequelize, DataType) => {
             type: DataType.STRING,
             allowNull: false
         }
-    });
-    Rref.associate = (models) => {
-        Rref.belongsTo(models.Panel, {
-            foreignKey: 'rref_id',
-            targetKey: 'panel_id'
+    }, { timestamps: false });
+    Rref.associate = (Panel) => {
+        Rref.belongsTo(Panel, {
+            as: 'section',
+            foreignKey: 'panel_id'
         });
-        Rref.hasMany(models.Rule, {
-            as: 'cases',
-            foreignKey: 'rule_id',
-            sourceKey: 'rref_id'
-        });
-        Rref.hasMany(models.Def, {
-            as: 'definitions',
-            foreignKey: 'def_id',
-            sourceKey: 'rref_id'
-        });
-    }
+        // Rref.hasMany(models, {
+        //     as: 'cases',
+        //     foreignKey: ['rule'],
+        // });
+        // Rref.hasMany(models, {
+        //     as: 'definitions',
+        //     foreignKey: ['def']
+        // });
+    };
     return Rref
 };
