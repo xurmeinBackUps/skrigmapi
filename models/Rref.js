@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataType) => {
     const Rref = sequelize.define('rref', {
-        rref_id:{
+        panel_id:{
             type: DataType.STRING
         },
         topic:{
@@ -9,22 +9,18 @@ module.exports = (sequelize, DataType) => {
             allowNull: false
         }
     }, { timestamps: false });
-    Rref.associate = panel => {
+    Rref.associate = (panel, rule, def) => {
         Rref.belongsTo(panel, {
             as: 'section',
             foreignKey: 'topic',
             targetKey: 'panel_id'
         });
-    };
-    Rref.associate = rule => {
         Rref.belongsToMany(rule, {
             through: 'rule_sheets',
             as: 'cases',
             foreignKey: 'rule_id',
             sourceKey: 'topic'
         });
-    };
-    Rref.associate = def => {
         Rref.belongsToMany(def, {
             through: 'definition_lists',
             as: 'definitions',

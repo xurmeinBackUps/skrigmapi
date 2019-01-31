@@ -1,5 +1,6 @@
 var router = require('express').Router();
 var sequelize = require('../db');
+var validate = require('../middleware/validate-session');
 var Rule = sequelize.import('../models/Rule');
 
 // router.post('/docitCreate', function (req, res){

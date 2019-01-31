@@ -1,27 +1,25 @@
 module.exports = (sequelize, DataType) => {
     const Panel = sequelize.define('panel', {
-        panel_id:{
+        GM:{
             type: DataType.STRING
         },
         title:{
             type: DataType.STRING,
             notEmpty: true
         },
-        GM:{
+        panel_id:{
             type: DataType.STRING
         }
     }, { timestamps: false });
 
-    Panel.associate = user => {
+    Panel.associate = (user, rref) => {
         Panel.belongsTo(user, {
             foreignKey: 'GM',
             targetKey: 'username'
         });
-    }
-    Panel.associate = rref => {
         Panel.hasMany(rref, {
             foreignKey: 'topic',
-            sourceKey: 'panel_id'
+            sourceKey: 'id'
         });
     };
     return Panel

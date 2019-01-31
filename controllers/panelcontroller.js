@@ -1,5 +1,6 @@
 var router = require('express').Router();
 var sequelize = require('../db');
+var validate = require('../middleware/validate-session');
 var Panel = sequelize.import('../models/Panel');
 
 
@@ -7,7 +8,7 @@ var Panel = sequelize.import('../models/Panel');
 //////////* CREATE *///////////
 ///////////////////////////////
 
-router.post('/new', function(req, res){
+router.post('/new', validate, function(req, res){
     let GMid = req.user.id;
     let Title = req.body.panel.title;
 
@@ -16,10 +17,11 @@ router.post('/new', function(req, res){
     }, { 
         where: { id: GMid }
     }).then(
-        function newPanel(panel){
+        function newPanel(GM){
             res.json({
                 message : 'You created new panel for you GM screen!',
-                title : Title
+                title : Title,
+                gm : GM
             });
         },
         function createCatFail(err){
@@ -33,7 +35,7 @@ router.post('/new', function(req, res){
 ///////////* READ *////////////
 ///////////////////////////////
 
-router.get('/mypanels', function(req, res){            
+router.get('/mypanels', validate, function(req, res){            
     let GMid = req.user.id;
 
     Panel.findAll({
@@ -48,12 +50,12 @@ router.get('/mypanels', function(req, res){
     );
 });
 
-router.get('/:id', function(req, res){
+router.get('/:id', validate, function(req, res){
     let data = req.params.panel_id;
     let GMid = req.user.id;
     let Title = res.body.panel.title;
 
-    Category.findOne({
+    Panel.findOne({
         where: { 
             panel_id : data,
             id : GMid 
@@ -77,7 +79,7 @@ router.get('/:id', function(req, res){
 //////////* UPDATE *///////////
 ///////////////////////////////
 
-router.put('/update/:id', function(req, res){
+router.put('/update/:id', validate, function(req, res){
     let data = req.params.panel_id;
     let Title = req.body.panel.title;
     let GMid = req.user.id
@@ -104,11 +106,11 @@ router.put('/update/:id', function(req, res){
 //////////* DELETE *///////////
 ///////////////////////////////
 
-router.delete('/delete/:id', function(req, res){
+router.delete('/delete/:id', validate, function(req, res){
     let data = req.params.panel_id;
     let GMid = req.user.id;
 
-    Category.destroy({
+    Panel.destroy({
         where: {panel_id : data, id : GMid}
     }).then(
         function euthenizeCat(data){

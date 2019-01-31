@@ -16,22 +16,18 @@ sequelize.sync(); ///{force: true} to reset tables in DB
 
 app.use(bodyParser.json());
 app.use(require('./middleware/headers'));
-
-app.use('/database/server-test', function(req, res){
-    res.send('SKRIGM GO! SKRIGM! SKRIGM! SKRIGM! SKRIGM! SKRIGM!')
-})
+// app.use(require('./middleware/associations'));
 
 app.use('/user', User);
-
-app.use(require('./middleware/validate-session'))
-
 app.use('/panels', Panel);
 app.use('/rule_refs', Rref);
 app.use('/defs', Def);
 app.use('/rules', Rule);
 
-
-
 app.listen(process.env.PORT, () => {
     console.log(`CONNECTED TO PORT ${process.env.PORT}`)
+});
+
+app.use('/database/server-test', function(req, res){
+    res.send('SKRIGM GO! SKRIGM! SKRIGM! SKRIGM! SKRIGM! SKRIGM!')
 });

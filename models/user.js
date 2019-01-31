@@ -8,9 +8,9 @@ module.exports = (sequelize, DataType) => {
         username:{
             type: DataType.STRING,
             primaryKey: true,
+            unique: true,
             validate: {
-                notEmpty: true,
-                unique: true
+                notEmpty: true
             }
         },
         password:{
