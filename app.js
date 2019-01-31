@@ -4,10 +4,10 @@ var express = require('express');
 var app = express();
 
 var User = require('./controllers/usercontroller');
+var Panel = require('./controllers/panelcontroller');
+var Rref = require('./controllers/rrefcontroller');
 var Def = require('./controllers/defcontroller');
 var Rule = require('./controllers/rulecontroller');
-var Rref = require('./controllers/rrefcontroller');
-var Panel = require('./controllers/panelcontroller');
 
 var sequelize = require('./db');
 var bodyParser = require('body-parser');
@@ -25,10 +25,10 @@ app.use('/user', User);
 
 app.use(require('./middleware/validate-session'))
 
+app.use('/panels', Panel);
+app.use('/rule_refs', Rref);
 app.use('/defs', Def);
 app.use('/rules', Rule);
-app.use('/rule_refs', Rref);
-app.use('/panels', Panel);
 
 
 

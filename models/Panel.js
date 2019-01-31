@@ -1,24 +1,28 @@
 module.exports = (sequelize, DataType) => {
     const Panel = sequelize.define('panel', {
         panel_id:{
-            type: DataType.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
+            type: DataType.STRING
         },
         title:{
             type: DataType.STRING,
-            allowNull: false
+            notEmpty: true
+        },
+        GM:{
+            type: DataType.STRING
         }
     }, { timestamps: false });
 
-    Panel.associate = (User) => {
-        Panel.belongsTo(User, {
-            foreignKey: 'username'
+    Panel.associate = user => {
+        Panel.belongsTo(user, {
+            foreignKey: 'GM',
+            targetKey: 'username'
         });
-        // Panel.hasMany(models.Rref, {
-        //     as: 'section',
-        //     foreignKey: ['rref'],
-        // });
+    }
+    Panel.associate = rref => {
+        Panel.hasMany(rref, {
+            foreignKey: 'topic',
+            sourceKey: 'panel_id'
+        });
     };
     return Panel
 };

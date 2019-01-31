@@ -1,9 +1,7 @@
 module.exports = (sequelize, DataType) => {
     const Rule = sequelize.define('rule', {
         rule_id:{
-            type: DataType.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
+            type: DataType.STRING
         },
         text:{
             type: DataType.STRING,
@@ -14,9 +12,11 @@ module.exports = (sequelize, DataType) => {
             allowNull: false
         }
     }, { timestamps: false });
-    Rule.associate = (Rref) => {
-        Rule.belongsTo(Rref, {
-            foreignKey: 'rref_id'
+    Rule.associate = rref => {
+        Rule.belongsToMany(rref, {
+            through: 'rule_sheets',
+            foreignKey: 'rule_id',
+            targetKey: 'topic'
         });
     }
     return Rule

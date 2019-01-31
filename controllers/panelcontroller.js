@@ -2,103 +2,125 @@ var router = require('express').Router();
 var sequelize = require('../db');
 var Panel = sequelize.import('../models/Panel');
 
-// router.post('/defineCategory', function(req, res){
-//     let userid = req.body.category.creator;
 
-//     let Title = req.body.category.title;
-//     let Creator = req.body.category.creator;
-//     let docit = req.body.category.docIt_id;
+///////////////////////////////
+//////////* CREATE *///////////
+///////////////////////////////
+
+router.post('/new', function(req, res){
+    let GMid = req.user.id;
+    let Title = req.body.panel.title;
+
+    Panel.create({
+        title: Title
+    }, { 
+        where: { id: GMid }
+    }).then(
+        function newPanel(panel){
+            res.json({
+                message : 'You created new panel for you GM screen!',
+                title : Title
+            });
+        },
+        function createCatFail(err){
+            res.status(500).send(err)
+        }
+    );
+});
 
 
-//     Category.create({
-//         title : Title,
-//         creator: Creator,
-//         docIt_id : docit
-//     }, {where: {docIt_id : docit, creator : userid}}
-//     ).then(
-//         function createCat(category){
-//             res.json({
-//                 message : 'New category for activities created!',
-//                 Title : req.body.category.title,
-//                 docit : req.body.category.docIt_id
-//             });
-//         },
-//         function createCatFail(err){
-//             res.status(500).send(err)
-//         }
-//     );
-// });
+///////////////////////////////
+///////////* READ *////////////
+///////////////////////////////
 
-// router.get('/allCategories', function(req, res){            
-//     let userid = req.body.category.creator;
+router.get('/mypanels', function(req, res){            
+    let GMid = req.user.id;
 
-//     Category.findAll({
-//         where: {creator : userid}
-//     }).then(
-//         function getMyDocItCats(data){
-//             res.json(data)
-//         },
-//         function getCatsFail(err){
-//             res.status(500).send({error : '500 - Internal Server Error'})
-//         }
-//     );
-// });
+    Panel.findAll({
+        where: {id : GMid}
+    }).then(
+        function getAllPanels(data){
+            res.json(data)
+        },
+        function getPanelsFail(err){
+            res.status(500).send(err)
+        }
+    );
+});
 
-// router.get('/oneCategory/:id', function(req, res){
-//     let data = req.params.id;
-//     let userid = req.body.category.creator;
+router.get('/:id', function(req, res){
+    let data = req.params.panel_id;
+    let GMid = req.user.id;
+    let Title = res.body.panel.title;
 
-//     Category.findOne({
-//         where: { id : data, creator : userid } 
-//     }).then(
-//         function foundOneCat(data){
-//             res.json(data);
-//         },
-//         function findNoCat(err){
-//             res.status(500).send({error: '500 - Internal Server Error'})
-//         }
-//     )
-// })
+    Category.findOne({
+        where: { 
+            panel_id : data,
+            id : GMid 
+        } 
+    }).then(
+        function foundOneCat(data){
+            res.json({
+                message: 'Your requested screen panel',
+                panel_id: data,
+                title : Title
+            });
+        },
+        function findNoCat(err){
+            res.status(500).send(err)
+        }
+    )
+})
 
-// router.delete('/deleteCategory/:id', function(req, res){
-//     let data = req.params.id;
-//     let userid = req.body.category.creator;
 
-//     Category.destroy({
-//         where: {id : data, creator : userid}
-//     }).then(
-//         function euthenizeCat(data){
-//             res.json({
-//                 message: 'Deleted!'
-//             });
-//         },
-//         function stillLivingCat(err){
-//             res.status(500).send({error: '500 - Internal Server Error'});
-//         }
-//     );
-// });
+///////////////////////////////
+//////////* UPDATE *///////////
+///////////////////////////////
 
-// router.put('/alterCategory/:id', function(req, res){
-//     let data = req.params.id;
-//     let Title = req.body.category.title;
-//     let Creator = req.body.category.creator;
-//     let docit = req.body.category.docIt_id;
+router.put('/update/:id', function(req, res){
+    let data = req.params.panel_id;
+    let Title = req.body.panel.title;
+    let GMid = req.user.id
+   
 
-//     Category.update({
-//         title : Title,
-//         creator : Creator,
-//         docIt_id : docit
-//     }, {where: {id : data}}
-//     ).then(
-//         function catUpdate(updatedCategory){
-//             res.json({
-//                 message : 'Category updated!'
-//             });
-//         },
-//         function catUpdateFail(err){
-//             res.status(500).send({error : '500 - Internal Server Error'})
-//         }
-//     );
-// });
+    Panel.update({
+        title : Title,
+    }, {where: {panel_id : data, id : GMid }}
+    ).then(
+        function titleUpdate(updatedTitle){
+            res.json({
+                message : "Panel's title changed!",
+                title: updatedTitle
+            });
+        },
+        function catUpdateFail(err){
+            res.status(500).send(err)
+        }
+    );
+});
+
+
+///////////////////////////////
+//////////* DELETE *///////////
+///////////////////////////////
+
+router.delete('/delete/:id', function(req, res){
+    let data = req.params.panel_id;
+    let GMid = req.user.id;
+
+    Category.destroy({
+        where: {panel_id : data, id : GMid}
+    }).then(
+        function euthenizeCat(data){
+            res.json({
+                message: `Deleted: ${data}`
+            });
+        },
+        function stillLivingCat(err){
+            res.status(500).send(err);
+        }
+    );
+});
+
 
 module.exports = router;

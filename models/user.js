@@ -1,22 +1,32 @@
 module.exports = (sequelize, DataType) => {
     const User = sequelize.define('user', {
+        id:{
+            type: DataType.INTEGER,
+            autoIncrement: true,
+            allowNull: false
+        },
         username:{
             type: DataType.STRING,
-            allowNull: false,
-            unique: true,
-            primaryKey: true
+            primaryKey: true,
+            validate: {
+                notEmpty: true,
+                unique: true
+            }
         },
         password:{
             type: DataType.STRING,
-            allowNull: false
+            validate: {
+                notEmpty: true,
+                contains: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,16}$/i       
+            }
         }
     }, { timestamps: false });
 
-    // User.associate = (Panel) => {
-    //     User.hasMany(Panel, {
-    //         as: 'GM',
-    //         foreignKey: 'username'
-    //     });
-    // };
+    User.associate = panel => {
+        User.hasMany(panel, {
+            foreignKey: 'GM',
+            sourceKey: 'username'
+        });
+    };
     return User
 };

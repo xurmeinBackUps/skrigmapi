@@ -1,9 +1,7 @@
 module.exports = (sequelize, DataType) => {
     const Def = sequelize.define('def', {
         def_id:{
-            type: DataType.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
+            type: DataType.STRING
         },
         thing:{
             type: DataType.STRING,
@@ -14,9 +12,11 @@ module.exports = (sequelize, DataType) => {
             allowNull: false
         }
     }, { timestamps: false });
-    Def.associate = (Rref) => {
-        Def.belongsTo(Rref, {
-            foreignKey: 'rref_id'
+    Def.associate = rref => {
+        Def.belongsToMany(rref, {
+            through: 'definition_lists',
+            foreignKey: 'def_id',
+            targetKey: 'topic'
         });
     }
     return Def
